@@ -1,0 +1,23 @@
+pipeline{
+agent any
+environment {
+DEPLOY_CREDS = credentials('ANYPOINT')
+}
+stages {
+   stage ('Build') {
+    steps {
+	echo 'Hello World'
+	bat 'mvn -B -U -e -V clean -DskipTests package'
+}
+	  }
+	  stage('Deploy CloudHub') {
+	environment {
+        ENVIRONMENT = 'Sandbox'
+        APP_NAME = 'dummy1'
+      }
+	  steps {
+           bat 'mvn -U -V -e -B -DskipTests deploy -DmuleDeploy -Danypoint.username="%DEPLOY_CREDS_USR%" -Danypoint.password="%DEPLOY_CREDS_PSW%"'
+	  }
+	  }
+	  }
+	  }
